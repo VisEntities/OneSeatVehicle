@@ -1,10 +1,16 @@
-﻿using Facepunch;
+﻿/*
+ * Copyright (C) 2024 Game4Freak.io
+ * This mod is provided under the Game4Freak EULA.
+ * Full legal terms can be found at https://game4freak.io/eula/
+ */
+
+using Facepunch;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Oxide.Plugins
 {
-    [Info("One Seat Vehicle", "VisEntities", "1.0.0")]
+    [Info("One Seat Vehicle", "VisEntities", "1.0.1")]
     [Description("Only one person per vehicle, no uninvited passengers.")]
     public class OneSeatVehicle : RustPlugin
     {
@@ -25,7 +31,7 @@ namespace Oxide.Plugins
             [JsonProperty("Vehicles")]
             public List<VehicleConfig> Vehicles { get; set; }
         }
-        
+
         private class VehicleConfig
         {
             [JsonProperty("Vehicle Short Prefab Name")]
@@ -144,7 +150,7 @@ namespace Oxide.Plugins
 
             if (vehicleConfig.AllowTeammatesToMount)
             {
-                List<BasePlayer> mountedPlayers = Pool.GetList<BasePlayer>();
+                List<BasePlayer> mountedPlayers = Pool.Get<List<BasePlayer>>();
                 vehicle.GetMountedPlayers(mountedPlayers);
 
                 bool isTeammate = false;
@@ -156,7 +162,7 @@ namespace Oxide.Plugins
                         break;
                     }
                 }
-                Pool.FreeList(ref mountedPlayers);
+                Pool.FreeUnmanaged(ref mountedPlayers);
 
                 if (isTeammate)
                     return null;
